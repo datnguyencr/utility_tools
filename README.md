@@ -1,3 +1,6 @@
+[![Pub Version](https://img.shields.io/pub/v/utility_tools.svg)](https://pub.dev/packages/utility_tools)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
 # Utility Tools
 
 A collection of utility helpers for Flutter and Dart, including file duplicate checking, process launching, and browser automation.
