@@ -11,13 +11,6 @@ class IdenticalChecker extends Tool {
   @override
   String description() => "Scan a folder and find identical files by hash.";
 
-  @override
-  void run() {
-    // Folder to scan
-    const folderPath = r'D:\pics';
-    checkFiles(folderPath, ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp']);
-  }
-
   Future<void> checkFiles(String folderPath, List<String> extensions) async {
     final folder = Directory(folderPath);
 
@@ -86,5 +79,8 @@ class IdenticalChecker extends Tool {
 
 void main() async {
   var tool = IdenticalChecker();
-  tool.run();
+  // Folder to scan
+  const folderPath = r'D:\pics';
+  final extensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'];
+  tool.checkFiles(folderPath, extensions);
 }

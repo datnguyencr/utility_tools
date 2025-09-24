@@ -7,7 +7,6 @@ abstract class Tool {
 
   String description();
 
-  void run();
 
   Future<void> executeBat(String name) async {
     try {
