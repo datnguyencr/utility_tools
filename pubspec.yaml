@@ -1,5 +1,6 @@
 name: utility_tools
-description: A new Flutter project.
+description: A collection of utility functions for Flutter and Dart, including helpers for process utils/check duplicate files.
+
 
 version: 1.0.0+1
 
