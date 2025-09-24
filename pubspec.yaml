@@ -2,7 +2,7 @@ name: utility_tools
 description: A collection of utility functions for Flutter and Dart, including helpers for process utils/check duplicate files.
 
 
-version: 1.0.0+1
+version: 1.0.0+2
 
 environment:
   sdk: ^3.6.0
