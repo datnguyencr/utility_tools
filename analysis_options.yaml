@@ -1,26 +1,82 @@
-# This file configures the analyzer, which statically analyzes Dart code to
-# check for errors, warnings, and lints.
-#
-# The issues identified by the analyzer are surfaced in the UI of Dart-enabled
-# IDEs (https://dart.dev/tools#ides-and-editors). The analyzer can also be
-# invoked from the command line by running `flutter analyze`.
+# analysis_options.yaml
+# Strong lint rules for consistency, readability, and maintainability across projects.
 
-# The following line activates a set of recommended lints for Flutter apps,
-# packages, and plugins designed to encourage good coding practices.
 include: package:flutter_lints/flutter.yaml
 
+formatter:
+  page_width: 100
+  trailing_commas: always
+
 analyzer:
-  exclude: [ build/** ]
   language:
-#    strict-casts: true
-#    strict-raw-types: true
+    strict-casts: true
+    strict-inference: true
+    strict-raw-types: true
+  errors:
+    todo: ignore
+    unawaited_futures: warning
+    invalid_use_of_visible_for_testing_member: warning
+  exclude:
+    - build/**
+    - "**/*.g.dart"
+    - "**/*.freezed.dart"
+    - "**/*.gr.dart"
+    - "**/*.config.dart"
+    - "**/*.module.dart"
 
 linter:
   rules:
-    - require_trailing_commas
+    # Style & consistency
     - always_declare_return_types
-    - always_require_non_null_named_parameters
+    - always_put_control_body_on_new_line
     - annotate_overrides
+    - avoid_empty_else
+    - curly_braces_in_flow_control_structures
+    - directives_ordering
+    - file_names
+    - prefer_single_quotes
+    - prefer_relative_imports
+    - sort_child_properties_last
 
-# Additional information about this file can be found at
-# https://dart.dev/guides/language/analysis-options
+    # Null-safety & correctness
+    - avoid_init_to_null
+    - avoid_null_checks_in_equality_operators
+    - null_closures
+    - prefer_if_null_operators
+    - unnecessary_null_aware_assignments
+    - unnecessary_null_in_if_null_operators
+    - use_full_hex_values_for_flutter_colors
+
+    # Performance & readability
+    - avoid_function_literals_in_foreach_calls
+    - avoid_returning_null_for_future
+    - avoid_returning_this
+    - avoid_unnecessary_containers
+    - prefer_const_constructors
+    - prefer_const_declarations
+    - prefer_final_fields
+    - prefer_final_locals
+    - prefer_interpolation_to_compose_strings
+    - unnecessary_const
+    - unnecessary_lambdas
+    - unnecessary_new
+    - unnecessary_parenthesis
+    - unnecessary_this
+    - use_string_buffers
+
+    # Safety & robustness
+    - avoid_print
+    - avoid_types_on_closure_parameters
+    - close_sinks
+    - cancel_subscriptions
+    - only_throw_errors
+    - package_prefixed_library_names
+    - type_annotate_public_apis
+    - unawaited_futures
+    - use_rethrow_when_possible
+
+    # Testing & maintenance
+    - provide_deprecation_message
+    - recursive_getters
+    - test_types_in_equals
+    - valid_regexps

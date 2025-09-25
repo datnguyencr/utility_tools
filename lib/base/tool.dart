@@ -7,7 +7,6 @@ abstract class Tool {
 
   String description();
 
-
   Future<void> executeBat(String name) async {
     try {
       final scriptDir = p.dirname(Platform.script.toFilePath());

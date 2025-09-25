@@ -8,8 +8,7 @@ final class ProcessUtils {
   }
 
   static void openChrome(
-      {String chromePath =
-          r'C:\Program Files\Google\Chrome\Application\chrome.exe',
+      {String chromePath = r'C:\Program Files\Google\Chrome\Application\chrome.exe',
       required List<String> urls}) async {
     await Process.start(chromePath, urls);
   }

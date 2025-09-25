@@ -3,10 +3,10 @@ import '../base/tool.dart';
 
 class OpenToolHelper extends Tool {
   @override
-  String name() => "Open Browser and Tools";
+  String name() => 'Open Browser and Tools';
 
   @override
-  String description() => "Opens Google Chrome with default tabs and IDE";
+  String description() => 'Opens Google Chrome with default tabs and IDE';
 
   void openChrome(List<String> urls) async {
     ProcessUtils.openChrome(
@@ -20,7 +20,7 @@ class OpenToolHelper extends Tool {
 }
 
 void main() async {
-  var tool = OpenToolHelper();
+  final tool = OpenToolHelper();
   tool.openChrome(
     [
       'https://teams.microsoft.com/v2/',
