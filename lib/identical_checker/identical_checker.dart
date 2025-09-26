@@ -1,106 +1,64 @@
 import 'dart:io';
 
 import 'package:crypto/crypto.dart';
-import 'package:flutter/foundation.dart';
+import 'package:path/path.dart' as p;
 
-import '../base/tool.dart';
-
-class IdenticalChecker extends Tool {
-  @override
-  String name() => 'Check Duplicate Files';
-
-  @override
-  String description() => 'Scan a folder and find identical files by hash.';
+class IdenticalChecker {
+  Map<String, List<String>> duplicateGroups = {};
 
   Future<void> checkFiles(String folderPath, List<String> extensions) async {
-    final folder = Directory(folderPath);
+    duplicateGroups.clear();
 
-    if (!folder.existsSync()) {
-      if (kDebugMode) {
-        print('Folder does not exist: $folderPath');
-      }
+    final dir = Directory(folderPath);
+
+    if (!await dir.exists()) {
+      print('Directory does not exist: $folderPath');
       return;
     }
 
-    // Step 1: Group files by size
-    final Map<int, List<File>> sizeMap = {};
+    final allFiles = await _listFilesRecursively(dir, extensions);
 
-    // Catch errors from restricted folders
-    await for (final entity in folder.list(recursive: true, followLinks: false).handleError((e) {
-      if (kDebugMode) {
-        print('Skipping: $e');
+    final Map<String, List<String>> hashMap = {};
+
+    for (final file in allFiles) {
+      final hash = await _getFileHash(file);
+      if (hash == null) continue;
+
+      if (!hashMap.containsKey(hash)) {
+        hashMap[hash] = [];
       }
-    }, test: (e) => e is FileSystemException)) {
+      hashMap[hash]!.add(file.path);
+    }
+
+    // Keep only groups with duplicates
+    duplicateGroups = {
+      for (var entry in hashMap.entries)
+        if (entry.value.length > 1) entry.key: entry.value
+    };
+  }
+
+  Future<List<File>> _listFilesRecursively(Directory dir, List<String> extensions) async {
+    final List<File> files = [];
+
+    await for (var entity in dir.list(recursive: true, followLinks: false)) {
       if (entity is File) {
-        final ext = entity.path.split('.').last.toLowerCase();
-        if (!extensions.contains(ext)) {
-          continue; // skip non-image files
-        }
-
-        try {
-          final size = await entity.length();
-          sizeMap.putIfAbsent(size, () => []).add(entity);
-        } catch (e) {
-          if (kDebugMode) {
-            print('Error reading file size ${entity.path}: $e');
-          }
+        final ext = p.extension(entity.path).toLowerCase().replaceAll('.', '');
+        if (extensions.contains(ext)) {
+          files.add(entity);
         }
       }
     }
+    return files;
+  }
 
-    // Step 2: Within each size group, compute hashes
-    bool foundDuplicates = false;
-    for (final entry in sizeMap.entries) {
-      final files = entry.value;
-      if (files.length < 2) {
-        continue; // no possible duplicates
-      }
-
-      final Map<String, List<String>> hashMap = {};
-
-      for (final file in files) {
-        try {
-          final bytes = await file.readAsBytes();
-          final hash = sha256.convert(bytes).toString();
-          hashMap.putIfAbsent(hash, () => []).add(file.path);
-        } catch (e) {
-          if (kDebugMode) {
-            print('Error hashing file ${file.path}: $e');
-          }
-        }
-      }
-
-      // Step 3: Print duplicates
-      hashMap.forEach((hash, paths) {
-        if (paths.length > 1) {
-          foundDuplicates = true;
-          if (kDebugMode) {
-            print('Duplicate images:');
-          }
-          for (final p in paths) {
-            if (kDebugMode) {
-              print('   $p');
-            }
-          }
-          if (kDebugMode) {
-            print('---------------------');
-          }
-        }
-      });
-    }
-
-    if (!foundDuplicates) {
-      if (kDebugMode) {
-        print('No identical files found.');
-      }
+  Future<String?> _getFileHash(File file) async {
+    try {
+      final bytes = await file.readAsBytes();
+      final digest = md5.convert(bytes); // MD5 hash for file content
+      return digest.toString();
+    } catch (e) {
+      print('Error hashing file ${file.path}: $e');
+      return null;
     }
   }
-}
-
-void main() async {
-  final tool = IdenticalChecker();
-  // Folder to scan
-  const folderPath = r'D:\pics';
-  final extensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'];
-  await tool.checkFiles(folderPath, extensions);
 }
