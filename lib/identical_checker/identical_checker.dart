@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:crypto/crypto.dart';
+import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as p;
 
 class IdenticalChecker {
@@ -12,7 +13,9 @@ class IdenticalChecker {
     final dir = Directory(folderPath);
 
     if (!await dir.exists()) {
-      print('Directory does not exist: $folderPath');
+      if (kDebugMode) {
+        print('Directory does not exist: $folderPath');
+      }
       return;
     }
 
@@ -22,7 +25,9 @@ class IdenticalChecker {
 
     for (final file in allFiles) {
       final hash = await _getFileHash(file);
-      if (hash == null) continue;
+      if (hash == null) {
+        continue;
+      }
 
       if (!hashMap.containsKey(hash)) {
         hashMap[hash] = [];
@@ -57,7 +62,9 @@ class IdenticalChecker {
       final digest = md5.convert(bytes); // MD5 hash for file content
       return digest.toString();
     } catch (e) {
-      print('Error hashing file ${file.path}: $e');
+      if (kDebugMode) {
+        print('Error hashing file ${file.path}: $e');
+      }
       return null;
     }
   }

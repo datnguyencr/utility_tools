@@ -44,7 +44,6 @@ Future<void> setupDesktopApp() async {
       .setMinimumSize(const Size(Constants.desktopAppWidth, Constants.desktopAppHeight));
   await windowManager
       .setMaximumSize(const Size(Constants.desktopAppWidth, Constants.desktopAppHeight));
-  await windowManager.setPreventClose(true);
 }
 
 Future<void> loadPackageInfo() async {
