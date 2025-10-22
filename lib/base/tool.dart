@@ -1,0 +1,26 @@
+import 'dart:io';
+
+import 'package:path/path.dart' as p;
+
+abstract class Tool {
+  String name();
+
+  String description();
+
+  Future<void> executeBat(String name) async {
+    try {
+      final scriptDir = p.dirname(Platform.script.toFilePath());
+      final batPath = p.join(scriptDir, name);
+      final result = await Process.run(
+        'cmd.exe',
+        ['/c', batPath],
+      );
+
+      // Print output for debugging
+      stdout.write(result.stdout);
+      stderr.write(result.stderr);
+    } catch (e) {
+      print('Failed to run batch file: $e');
+    }
+  }
+}
