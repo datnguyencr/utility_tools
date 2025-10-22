@@ -1,19 +1,18 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter/foundation.dart';
-
 class TranslationsManager {
   final List<String> languages;
   final String folderPath;
   final dynamic jsonContent;
   final String defaultLocale;
 
-  TranslationsManager(
-      {this.languages = const ['en', 'de', 'fr', 'ja', 'es', 'pt', 'ko', 'zh', 'vi', 'ru'],
-      this.folderPath = 'assets/translations',
-      this.jsonContent = const {'app_name': 'New App'},
-      this.defaultLocale = 'en'});
+  TranslationsManager({
+    this.languages = const ['en', 'de', 'fr', 'ja', 'es', 'pt', 'ko', 'zh', 'vi', 'ru'],
+    this.folderPath = 'assets/translations',
+    this.jsonContent = const {'app_name': 'New App'},
+    this.defaultLocale = 'en',
+  });
 
   void initFolder() {
     final folder = Directory(folderPath);
@@ -37,15 +36,12 @@ class TranslationsManager {
     final targetFile = File('$folderPath/$locale.json');
 
     if (!defaultFile.existsSync() || !targetFile.existsSync()) {
-      if (kDebugMode) {
-        print('One or both files do not exist.');
-      }
+      print('One or both files do not exist.');
       return;
     }
     try {
-      if (kDebugMode) {
-        print('$locale.json:');
-      }
+      print('$locale.json:');
+
       final defaultJson = jsonDecode(defaultFile.readAsStringSync()) as Map<String, dynamic>;
       final targetJson = jsonDecode(targetFile.readAsStringSync()) as Map<String, dynamic>;
 
@@ -56,25 +52,17 @@ class TranslationsManager {
       final extraKeys = deKeys.difference(enKeys);
 
       if (missingKeys.isEmpty && extraKeys.isEmpty) {
-        if (kDebugMode) {
-          print('✅ All keys match!');
-        }
+        print('✅ All keys match!');
       } else {
         if (missingKeys.isNotEmpty) {
-          if (kDebugMode) {
-            print('❌ Keys missing: ${missingKeys.join(', ')}');
-          }
+          print('❌ Keys missing: ${missingKeys.join(', ')}');
         }
         if (extraKeys.isNotEmpty) {
-          if (kDebugMode) {
-            print('❌ Extra keys: ${extraKeys.join(', ')}');
-          }
+          print('❌ Extra keys: ${extraKeys.join(', ')}');
         }
       }
     } catch (error) {
-      if (kDebugMode) {
-        print('❌ Invalid JSON format');
-      }
+      print('❌ Invalid JSON format');
     }
   }
 
@@ -83,9 +71,7 @@ class TranslationsManager {
     final file = File(filePath);
     if (!file.existsSync()) {
       file.writeAsStringSync(const JsonEncoder.withIndent('  ').convert(jsonContent));
-      if (kDebugMode) {
-        print('$filePath added');
-      }
+      print('$filePath added');
     }
   }
 }

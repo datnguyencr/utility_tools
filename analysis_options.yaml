@@ -16,6 +16,7 @@ analyzer:
     todo: ignore
     unawaited_futures: warning
     invalid_use_of_visible_for_testing_member: warning
+    avoid_print: ignore
   exclude:
     - build/**
     - "**/*.g.dart"

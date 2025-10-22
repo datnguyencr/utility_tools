@@ -11,10 +11,7 @@ abstract class Tool {
     try {
       final scriptDir = p.dirname(Platform.script.toFilePath());
       final batPath = p.join(scriptDir, name);
-      final result = await Process.run(
-        'cmd.exe',
-        ['/c', batPath],
-      );
+      final result = await Process.run('cmd.exe', ['/c', batPath]);
 
       // Print output for debugging
       stdout.write(result.stdout);
