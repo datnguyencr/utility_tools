@@ -1,0 +1,30 @@
+name: utility_tools
+description: A collection of utility functions for Flutter and Dart
+repository: https://github.com/datnguyencr/utility_tools.git
+version: 1.0.2+6
+
+environment:
+  sdk: ^3.9.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  intl: ^0.19.0
+  crypto: ^3.0.6
+  path: ^1.9.1
+  http: ^1.6.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^5.0.0
+  build_runner: ^2.4.11
+
+flutter:
+
+  uses-material-design: true
+
+
+
+
