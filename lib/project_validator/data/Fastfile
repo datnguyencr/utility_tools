@@ -1,0 +1,28 @@
+# Flutter build
+def build_flutter_release
+  sh "flutter pub run build_runner build --delete-conflicting-outputs"
+  sh "flutter build appbundle --release"
+end
+
+# Playstore upload
+def deploy_to_play(track:, full: false)
+  build_flutter_release
+  upload_to_play_store(
+    track: track,
+    aab: "../build/app/outputs/bundle/release/app-release.aab",
+    skip_upload_metadata: !full,
+    skip_upload_changelogs: !full,
+    skip_upload_images: !full,
+    skip_upload_screenshots: !full
+  )
+end
+
+# Lanes
+lane(:alpha_all) { deploy_to_play(track: "alpha", full: true) }
+lane(:alpha)     { deploy_to_play(track: "alpha") }
+
+lane(:beta_all)  { deploy_to_play(track: "beta", full: true) }
+lane(:beta)      { deploy_to_play(track: "beta") }
+
+lane(:production_all) { deploy_to_play(track: "production", full: true) }
+lane(:production)     { deploy_to_play(track: "production") }

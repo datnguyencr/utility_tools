@@ -1,0 +1,11 @@
+json_key_file(File.expand_path("ssteam-bot.json", __dir__))
+
+gradle_file = File.expand_path("../app/build.gradle.kts", __dir__)
+abort("Gradle file not found: #{gradle_file}") unless File.exist?(gradle_file)
+
+# Extract namespace / package name from build.gradle.kts
+# Handles Kotlin DSL format: namespace = "com.example.app"
+namespace = File.read(gradle_file)[/namespace\s*=\s*['"]([^'"]+)['"]/, 1]
+abort("Could not detect namespace in build.gradle.kts") if namespace.nil?
+
+package_name(namespace)

@@ -1,0 +1,67 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+      - 'v*.*.*.*'
+
+jobs:
+  release_store:
+    name: Run Fastlane Alpha Deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    container:
+      image: ghcr.io/datnguyencr/flutter-fastlane:3.35.2
+      options: --memory=6g
+
+    env:
+      LC_ALL: C.UTF-8
+      LANG: C.UTF-8
+      GRADLE_USER_HOME: ${{ github.workspace }}/.gradle
+      PUB_CACHE: ${{ github.workspace }}/.pub-cache
+      FLUTTER_BUILD_DIR: build
+      CI: true
+      TRACK: alpha
+      GRADLE_OPTS: "-Xmx3072m -Dfile.encoding=UTF-8"
+      GIT_TAG: ${{ github.ref_name }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Clean build artifacts
+        run: flutter clean || true
+
+      # --- Cache Pub dependencies ---
+      - name: Cache Flutter Pub dependencies
+        uses: actions/cache@v4
+        with:
+          path: ${{ github.workspace }}/.pub-cache
+          key: pub-cache-${{ runner.os }}-${{ hashFiles('pubspec.lock') }}
+          restore-keys: |
+            pub-cache-${{ runner.os }}-
+
+      # --- Cache Gradle ---
+      - name: Cache Gradle
+        uses: actions/cache@v4
+        with:
+          path: ${{ github.workspace }}/.gradle
+          key: gradle-cache-${{ runner.os }}-${{ hashFiles('android/build.gradle','android/app/build.gradle') }}
+          restore-keys: |
+            gradle-cache-${{ runner.os }}-
+
+      - name: Flutter environment check
+        run: flutter doctor -v
+
+      - name: Install dependencies
+        run: flutter pub get --no-precompile
+
+      - name: Run Fastlane Alpha Lane
+        working-directory: android
+        run: |
+          echo "🚀 Running Fastlane Alpha Lane..."
+          fastlane alpha --verbose
