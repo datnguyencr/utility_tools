@@ -7,5 +7,10 @@
 ---
 
 ## Features
-- translations_manager
+- cmd_util
+- easy_localization_helper
 - identical_checker
+- process_util
+- project_validator
+- translations_manager
+

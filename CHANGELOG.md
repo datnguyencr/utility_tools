@@ -2,5 +2,5 @@
 
 - Initial release.
 
-## 1.0.2+6
+## 1.0.3+7
 ⦁	Bug fixes and performance improvements.
